@@ -29,7 +29,7 @@ func UsageCommands() string {
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` metrics asset --slug "Autem dolor."` + "\n" +
+	return os.Args[0] + ` metrics asset --slug "Voluptas consequatur laboriosam est doloribus culpa voluptas."` + "\n" +
 		""
 }
 
@@ -158,7 +158,7 @@ Asset implements asset.
     -slug STRING: 
 
 Example:
-    `+os.Args[0]+` metrics asset --slug "Autem dolor."
+    `+os.Args[0]+` metrics asset --slug "Voluptas consequatur laboriosam est doloribus culpa voluptas."
 `, os.Args[0])
 }
 
@@ -170,6 +170,6 @@ Aggregate implements aggregate.
     -sector STRING: 
 
 Example:
-    `+os.Args[0]+` metrics aggregate --tags "Culpa voluptas voluptatem eos veniam." --sector "Asperiores sunt a."
+    `+os.Args[0]+` metrics aggregate --tags "Aliquam assumenda." --sector "Animi quod voluptas."
 `, os.Args[0])
 }

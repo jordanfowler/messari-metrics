@@ -13,7 +13,16 @@ import (
 
 // AssetResponseBody is the type of the "metrics" service "asset" endpoint HTTP
 // response body.
-type AssetResponseBody struct {
+type AssetResponseBody AssetMetricsResponseBody
+
+// AggregateResponseBody is the type of the "metrics" service "aggregate"
+// endpoint HTTP response body.
+type AggregateResponseBody []*AssetMetrics
+
+// AssetMetricsResponseBody is used to define fields on response body types.
+type AssetMetricsResponseBody struct {
+	// Asset slug
+	AssetSlug *string `form:"assetSlug,omitempty" json:"assetSlug,omitempty" xml:"assetSlug,omitempty"`
 	// Current spot price in USD
 	Price *float64 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
 	// Volume traded over last 24 hours
@@ -24,9 +33,10 @@ type AssetResponseBody struct {
 	Mktcap *float64 `form:"mktcap,omitempty" json:"mktcap,omitempty" xml:"mktcap,omitempty"`
 }
 
-// AggregateResponseBody is the type of the "metrics" service "aggregate"
-// endpoint HTTP response body.
-type AggregateResponseBody struct {
+// AssetMetrics is used to define fields on response body types.
+type AssetMetrics struct {
+	// Asset slug
+	AssetSlug *string `form:"assetSlug,omitempty" json:"assetSlug,omitempty" xml:"assetSlug,omitempty"`
 	// Current spot price in USD
 	Price *float64 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
 	// Volume traded over last 24 hours
@@ -40,25 +50,30 @@ type AggregateResponseBody struct {
 // NewAssetResultOK builds a "metrics" service "asset" endpoint result from a
 // HTTP "OK" response.
 func NewAssetResultOK(body *AssetResponseBody) *metrics.AssetResult {
-	v := &metrics.AssetResult{
-		Price:   body.Price,
-		Vlm24hr: body.Vlm24hr,
-		Chg24hr: body.Chg24hr,
-		Mktcap:  body.Mktcap,
+	v := &metrics.AssetMetrics{
+		AssetSlug: body.AssetSlug,
+		Price:     body.Price,
+		Vlm24hr:   body.Vlm24hr,
+		Chg24hr:   body.Chg24hr,
+		Mktcap:    body.Mktcap,
+	}
+	res := &metrics.AssetResult{
+		Metric: v,
 	}
 
-	return v
+	return res
 }
 
 // NewAggregateResultOK builds a "metrics" service "aggregate" endpoint result
 // from a HTTP "OK" response.
-func NewAggregateResultOK(body *AggregateResponseBody) *metrics.AggregateResult {
-	v := &metrics.AggregateResult{
-		Price:   body.Price,
-		Vlm24hr: body.Vlm24hr,
-		Chg24hr: body.Chg24hr,
-		Mktcap:  body.Mktcap,
+func NewAggregateResultOK(body []*AssetMetrics) *metrics.AggregateResult {
+	v := make([]*metrics.AssetMetrics, len(body))
+	for i, val := range body {
+		v[i] = unmarshalAssetMetricsToMetricsAssetMetrics(val)
+	}
+	res := &metrics.AggregateResult{
+		Metrics: v,
 	}
 
-	return v
+	return res
 }

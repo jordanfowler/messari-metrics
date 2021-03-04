@@ -18,27 +18,57 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Qui aut impedit ipsa omnis et.
-        example: Eius est reprehenderit voluptatem dolores ullam.
+          example: Et quasi omnis voluptas.
+        example: Doloribus ut ducimus sit.
       - name: sector
         in: query
         allowEmptyValue: true
         schema:
           type: string
-          example: Et magnam.
-        example: Excepturi aut.
+          example: Ipsa architecto perspiciatis dolorem.
+        example: Pariatur esse voluptatem aliquid.
       responses:
         "200":
           description: OK response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetResponseBody'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MetricsassetResponseBody'
+                description: aggregated metrics
+                example:
+                - assetSlug: Earum reprehenderit aut quia et.
+                  chg24hr: 0.22850602112513993
+                  mktcap: 0.0441609119748389
+                  price: 0.5800515509158537
+                  vlm24hr: 0.8549848215992812
+                - assetSlug: Earum reprehenderit aut quia et.
+                  chg24hr: 0.22850602112513993
+                  mktcap: 0.0441609119748389
+                  price: 0.5800515509158537
+                  vlm24hr: 0.8549848215992812
+                - assetSlug: Earum reprehenderit aut quia et.
+                  chg24hr: 0.22850602112513993
+                  mktcap: 0.0441609119748389
+                  price: 0.5800515509158537
+                  vlm24hr: 0.8549848215992812
+                - assetSlug: Earum reprehenderit aut quia et.
+                  chg24hr: 0.22850602112513993
+                  mktcap: 0.0441609119748389
+                  price: 0.5800515509158537
+                  vlm24hr: 0.8549848215992812
               example:
-                chg24hr: 0.27326719988534426
-                mktcap: 0.3684056302495918
-                price: 0.9501932541579612
-                vlm24hr: 0.12177489652670526
+              - assetSlug: Earum reprehenderit aut quia et.
+                chg24hr: 0.22850602112513993
+                mktcap: 0.0441609119748389
+                price: 0.5800515509158537
+                vlm24hr: 0.8549848215992812
+              - assetSlug: Earum reprehenderit aut quia et.
+                chg24hr: 0.22850602112513993
+                mktcap: 0.0441609119748389
+                price: 0.5800515509158537
+                vlm24hr: 0.8549848215992812
   /asset/{slug}:
     get:
       tags:
@@ -51,47 +81,22 @@ paths:
         required: true
         schema:
           type: string
-          example: Odit deserunt alias deleniti omnis qui.
-        example: Qui eaque.
+          example: Ullam ratione et magnam cumque.
+        example: Aut et qui aut fuga rerum.
       responses:
         "200":
           description: OK response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetResponseBody'
+                $ref: '#/components/schemas/MetricsassetResponseBody'
               example:
-                chg24hr: 0.9102794303292007
-                mktcap: 0.22299308532626247
-                price: 0.6784980879589652
-                vlm24hr: 0.48325109546423445
+                assetSlug: Eos veniam omnis asperiores sunt a velit.
+                chg24hr: 0.3684056302495918
+                mktcap: 0.6969528185978329
+                price: 0.12177489652670526
+                vlm24hr: 0.27326719988534426
 components:
   schemas:
-    AssetResponseBody:
-      type: object
-      properties:
-        chg24hr:
-          type: number
-          description: Change in price over last 24 hours
-          example: 0.31418984381071996
-          format: double
-        mktcap:
-          type: number
-          description: Market cap of asset
-          example: 0.07264641436963874
-          format: double
-        price:
-          type: number
-          description: Current spot price in USD
-          example: 0.5287576957572823
-          format: double
-        vlm24hr:
-          type: number
-          description: Volume traded over last 24 hours
-          example: 0.9377502259503253
-          format: double
-      example:
-        chg24hr: 0.30771247386381745
-        mktcap: 0.46584838432716885
-        price: 0.08279143869219083
-        vlm24hr: 0.7912187872058065
+    MetricsassetResponseBody:
+      $ref: '#/components/schemas/MetricsassetResponseBody'

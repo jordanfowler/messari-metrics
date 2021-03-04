@@ -27,6 +27,28 @@ type successResponse struct {
 	Data interface{} `json:"data"`
 }
 
+// AssetMetrics provide mapped access to asset metric response data
+type AssetMetrics struct {
+	MarketData struct {
+		PriceUSD                    float64 `json:"price_usd"`
+		VolumeLast24Hours           float64 `json:"volume_last_24_hours"`
+		PercentChangeUSDLast24Hours float64 `json:"percent_change_usd_last_24_hours"`
+	} `json:"market_data"`
+	MarketCap struct {
+		CurrentMarketCapUSD float64 `json:"current_marketcap_usd"`
+	} `json:"marketcap"`
+	MiscData struct {
+		Tags   []string `json:"tags"`
+		Sector []string `json:"sector"`
+	} `json:"misc_data"`
+}
+
+// Asset provide mapped access to asset response data
+type Asset struct {
+	Slug    string       `json:"slug"`
+	Metrics AssetMetrics `json:"metrics"`
+}
+
 // Client wraps calls to Messari API
 type Client struct {
 	apiKey     string
@@ -74,41 +96,6 @@ func (c *Client) fetch(req *http.Request, v interface{}) error {
 	return nil
 }
 
-// GetAllAssets calls /api/v2/assets
-func (c *Client) GetAllAssets(ctx context.Context, params map[string]interface{}) (res map[string]interface{}, err error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/assets/metrics", BaseURLV2), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(params) > 0 {
-		q := req.URL.Query()
-		if fields, ok := params["fields"].([]string); ok {
-			q.Add("fields", strings.Join(fields, ","))
-		}
-	}
-
-	req = req.WithContext(ctx)
-
-	if err := c.fetch(req, &res); err != nil {
-		return nil, err
-	}
-
-	return res, nil
-}
-
-// AssetMetrics provide mapped access to metric response data
-type AssetMetrics struct {
-	MarketData struct {
-		PriceUSD                    float64 `json:"price_usd"`
-		VolumeLast24Hours           float64 `json:"volume_last_24_hours"`
-		PercentChangeUSDLast24Hours float64 `json:"percent_change_usd_last_24_hours"`
-	} `json:"market_data"`
-	MarketCap struct {
-		CurrentMarketCapUSD float64 `json:"current_marketcap_usd"`
-	} `json:"marketcap"`
-}
-
 // GetAssetMetrics calls /api/v1/assets/{slug}/metrics
 func (c *Client) GetAssetMetrics(ctx context.Context, assetSlug string, params map[string]interface{}) (res *AssetMetrics, err error) {
 	res = &AssetMetrics{}
@@ -127,6 +114,36 @@ func (c *Client) GetAssetMetrics(ctx context.Context, assetSlug string, params m
 	req = req.WithContext(ctx)
 
 	if err := c.fetch(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// GetAllAssets calls /api/v2/assets
+func (c *Client) GetAllAssets(ctx context.Context, params map[string]interface{}) (res []Asset, err error) {
+	res = []Asset{}
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/assets", BaseURLV2), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(params) > 0 {
+		q := req.URL.Query()
+		if fields, ok := params["fields"].([]string); ok {
+			q.Add("fields", strings.Join(fields, ","))
+		}
+		if limit, ok := params["limit"].(string); ok {
+			q.Add("limit", limit)
+		}
+		if page, ok := params["page"].(string); ok {
+			q.Add("page", page)
+		}
+	}
+
+	req = req.WithContext(ctx)
+
+	if err := c.fetch(req, &res); err != nil {
 		return nil, err
 	}
 

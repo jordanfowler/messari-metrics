@@ -13,7 +13,16 @@ import (
 
 // AssetResponseBody is the type of the "metrics" service "asset" endpoint HTTP
 // response body.
-type AssetResponseBody struct {
+type AssetResponseBody AssetMetricsResponseBody
+
+// AggregateResponseBody is the type of the "metrics" service "aggregate"
+// endpoint HTTP response body.
+type AggregateResponseBody []*AssetMetrics
+
+// AssetMetricsResponseBody is used to define fields on response body types.
+type AssetMetricsResponseBody struct {
+	// Asset slug
+	AssetSlug *string `form:"assetSlug,omitempty" json:"assetSlug,omitempty" xml:"assetSlug,omitempty"`
 	// Current spot price in USD
 	Price *float64 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
 	// Volume traded over last 24 hours
@@ -24,9 +33,10 @@ type AssetResponseBody struct {
 	Mktcap *float64 `form:"mktcap,omitempty" json:"mktcap,omitempty" xml:"mktcap,omitempty"`
 }
 
-// AggregateResponseBody is the type of the "metrics" service "aggregate"
-// endpoint HTTP response body.
-type AggregateResponseBody struct {
+// AssetMetrics is used to define fields on response body types.
+type AssetMetrics struct {
+	// Asset slug
+	AssetSlug *string `form:"assetSlug,omitempty" json:"assetSlug,omitempty" xml:"assetSlug,omitempty"`
 	// Current spot price in USD
 	Price *float64 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
 	// Volume traded over last 24 hours
@@ -41,22 +51,21 @@ type AggregateResponseBody struct {
 // "asset" endpoint of the "metrics" service.
 func NewAssetResponseBody(res *metrics.AssetResult) *AssetResponseBody {
 	body := &AssetResponseBody{
-		Price:   res.Price,
-		Vlm24hr: res.Vlm24hr,
-		Chg24hr: res.Chg24hr,
-		Mktcap:  res.Mktcap,
+		AssetSlug: res.Metric.AssetSlug,
+		Price:     res.Metric.Price,
+		Vlm24hr:   res.Metric.Vlm24hr,
+		Chg24hr:   res.Metric.Chg24hr,
+		Mktcap:    res.Metric.Mktcap,
 	}
 	return body
 }
 
 // NewAggregateResponseBody builds the HTTP response body from the result of
 // the "aggregate" endpoint of the "metrics" service.
-func NewAggregateResponseBody(res *metrics.AggregateResult) *AggregateResponseBody {
-	body := &AggregateResponseBody{
-		Price:   res.Price,
-		Vlm24hr: res.Vlm24hr,
-		Chg24hr: res.Chg24hr,
-		Mktcap:  res.Mktcap,
+func NewAggregateResponseBody(res *metrics.AggregateResult) AggregateResponseBody {
+	body := make([]*AssetMetrics, len(res.Metrics))
+	for i, val := range res.Metrics {
+		body[i] = marshalMetricsAssetMetricsToAssetMetrics(val)
 	}
 	return body
 }

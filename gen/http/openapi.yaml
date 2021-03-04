@@ -32,7 +32,9 @@ paths:
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/MetricsAggregateResponseBody'
+            type: array
+            items:
+              $ref: '#/definitions/AssetMetrics'
       schemes:
       - http
   /asset/{slug}:
@@ -54,61 +56,74 @@ paths:
       schemes:
       - http
 definitions:
-  MetricsAggregateResponseBody:
-    title: MetricsAggregateResponseBody
+  AssetMetrics:
+    title: AssetMetrics
     type: object
     properties:
+      assetSlug:
+        type: string
+        description: Asset slug
+        example: Deleniti omnis.
       chg24hr:
         type: number
         description: Change in price over last 24 hours
-        example: 0.017032677233100632
+        example: 0.22824500320696345
         format: double
       mktcap:
         type: number
         description: Market cap of asset
-        example: 0.8509346921152394
+        example: 0.5357941098735186
         format: double
       price:
         type: number
         description: Current spot price in USD
-        example: 0.6461548232124056
+        example: 0.9974494704262243
         format: double
       vlm24hr:
         type: number
         description: Volume traded over last 24 hours
-        example: 0.713675077241713
+        example: 0.2827616709063785
         format: double
     example:
-      chg24hr: 0.21259636440754803
-      mktcap: 0.6755584953023707
-      price: 0.7303753751077985
-      vlm24hr: 0.45889189017486626
+      assetSlug: Qui aut impedit ipsa omnis et.
+      chg24hr: 0.5116974205645489
+      mktcap: 0.0160442318077319
+      price: 0.7364241016375906
+      vlm24hr: 0.7527376846536737
+  AssetMetricsResponseBody:
+    title: AssetMetricsResponseBody
+    type: object
+    properties:
+      assetSlug:
+        type: string
+        description: Asset slug
+        example: Distinctio doloribus ab a occaecati.
+      chg24hr:
+        type: number
+        description: Change in price over last 24 hours
+        example: 0.31418984381071996
+        format: double
+      mktcap:
+        type: number
+        description: Market cap of asset
+        example: 0.07264641436963874
+        format: double
+      price:
+        type: number
+        description: Current spot price in USD
+        example: 0.5287576957572823
+        format: double
+      vlm24hr:
+        type: number
+        description: Volume traded over last 24 hours
+        example: 0.9377502259503253
+        format: double
+    example:
+      assetSlug: Aut ea.
+      chg24hr: 0.5108998417217978
+      mktcap: 0.3382291708116491
+      price: 0.46584838432716885
+      vlm24hr: 0.1330519943929049
   MetricsAssetResponseBody:
     title: MetricsAssetResponseBody
-    type: object
-    properties:
-      chg24hr:
-        type: number
-        description: Change in price over last 24 hours
-        example: 0.5892879747674146
-        format: double
-      mktcap:
-        type: number
-        description: Market cap of asset
-        example: 0.9688286091107458
-        format: double
-      price:
-        type: number
-        description: Current spot price in USD
-        example: 0.6969528185978329
-        format: double
-      vlm24hr:
-        type: number
-        description: Volume traded over last 24 hours
-        example: 0.48434118404870374
-        format: double
-    example:
-      chg24hr: 0.7237194876627221
-      mktcap: 0.4743631451758633
-      price: 0.03735890575350507
-      vlm24hr: 0.5894630986407703
+    $ref: '#/definitions/AssetMetricsResponseBody'

@@ -12,21 +12,29 @@ var _ = API("metrics", func() {
 	})
 })
 
+// AssetMetrics is a user type for a single AssetMetrics record
+var AssetMetrics = Type("AssetMetrics", func() {
+	Attribute("assetSlug", String, "Asset slug")
+	Attribute("price", Float64, "Current spot price in USD")
+	Attribute("vlm24hr", Float64, "Volume traded over last 24 hours")
+	Attribute("chg24hr", Float64, "Change in price over last 24 hours")
+	Attribute("mktcap", Float64, "Market cap of asset")
+})
+
 var _ = Service("metrics", func() {
 	Method("asset", func() {
 		Payload(func() {
 			Attribute("slug", String)
 		})
 		Result(func() {
-			Attribute("price", Float64, "Current spot price in USD")
-			Attribute("vlm24hr", Float64, "Volume traded over last 24 hours")
-			Attribute("chg24hr", Float64, "Change in price over last 24 hours")
-			Attribute("mktcap", Float64, "Market cap of asset")
+			Attribute("metric", AssetMetrics)
 			// Can add additional metrics here...
 		})
 		HTTP(func() {
 			GET("/asset/{slug}")
-			Response(StatusOK)
+			Response(StatusOK, func() {
+				Body("metric")
+			})
 		})
 	})
 	Method("aggregate", func() {
@@ -35,17 +43,16 @@ var _ = Service("metrics", func() {
 			Attribute("sector", String)
 		})
 		Result(func() {
-			Attribute("price", Float64, "Current spot price in USD")
-			Attribute("vlm24hr", Float64, "Volume traded over last 24 hours")
-			Attribute("chg24hr", Float64, "Change in price over last 24 hours")
-			Attribute("mktcap", Float64, "Market cap of asset")
+			Attribute("metrics", ArrayOf(AssetMetrics), "aggregated metrics")
 			// Can add additional metrics here...
 		})
 		HTTP(func() {
 			GET("/aggregate")
 			Param("tags")
 			Param("sector")
-			Response(StatusOK)
+			Response(StatusOK, func() {
+				Body("metrics")
+			})
 		})
 	})
 })

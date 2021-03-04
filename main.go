@@ -67,6 +67,9 @@ func main() {
 	var wg sync.WaitGroup
 	ctx, cancel := context.WithCancel(context.Background())
 
+	// Build asset caches in memory
+	go buildAssetCaches()
+
 	// Start the servers and send errors (if any) to the error channel.
 	switch *hostF {
 	case "localhost":

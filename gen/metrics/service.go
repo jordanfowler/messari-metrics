@@ -36,14 +36,7 @@ type AssetPayload struct {
 
 // AssetResult is the result type of the metrics service asset method.
 type AssetResult struct {
-	// Current spot price in USD
-	Price *float64
-	// Volume traded over last 24 hours
-	Vlm24hr *float64
-	// Change in price over last 24 hours
-	Chg24hr *float64
-	// Market cap of asset
-	Mktcap *float64
+	Metric *AssetMetrics
 }
 
 // AggregatePayload is the payload type of the metrics service aggregate method.
@@ -54,6 +47,13 @@ type AggregatePayload struct {
 
 // AggregateResult is the result type of the metrics service aggregate method.
 type AggregateResult struct {
+	// aggregated metrics
+	Metrics []*AssetMetrics
+}
+
+type AssetMetrics struct {
+	// Asset slug
+	AssetSlug *string
 	// Current spot price in USD
 	Price *float64
 	// Volume traded over last 24 hours

@@ -143,11 +143,25 @@ func DecodeAggregateResponse(decoder func(*http.Response) goahttp.Decoder, resto
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("metrics", "aggregate", err)
 			}
-			res := NewAggregateResultOK(&body)
+			res := NewAggregateResultOK(body)
 			return res, nil
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
 			return nil, goahttp.ErrInvalidResponse("metrics", "aggregate", resp.StatusCode, string(body))
 		}
 	}
+}
+
+// unmarshalAssetMetricsToMetricsAssetMetrics builds a value of type
+// *metrics.AssetMetrics from a value of type *AssetMetrics.
+func unmarshalAssetMetricsToMetricsAssetMetrics(v *AssetMetrics) *metrics.AssetMetrics {
+	res := &metrics.AssetMetrics{
+		AssetSlug: v.AssetSlug,
+		Price:     v.Price,
+		Vlm24hr:   v.Vlm24hr,
+		Chg24hr:   v.Chg24hr,
+		Mktcap:    v.Mktcap,
+	}
+
+	return res
 }

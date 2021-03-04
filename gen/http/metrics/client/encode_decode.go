@@ -105,8 +105,8 @@ func EncodeAggregateRequest(encoder func(*http.Request) goahttp.Encoder) func(*h
 			return goahttp.ErrInvalidType("metrics", "aggregate", "*metrics.AggregatePayload", v)
 		}
 		values := req.URL.Query()
-		if p.Tags != nil {
-			values.Add("tags", *p.Tags)
+		if p.Tag != nil {
+			values.Add("tag", *p.Tag)
 		}
 		if p.Sector != nil {
 			values.Add("sector", *p.Sector)

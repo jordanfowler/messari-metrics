@@ -39,7 +39,7 @@ var _ = Service("metrics", func() {
 	})
 	Method("aggregate", func() {
 		Payload(func() {
-			Attribute("tags", String)
+			Attribute("tag", String)
 			Attribute("sector", String)
 		})
 		Result(func() {
@@ -48,7 +48,7 @@ var _ = Service("metrics", func() {
 		})
 		HTTP(func() {
 			GET("/aggregate")
-			Param("tags")
+			Param("tag")
 			Param("sector")
 			Response(StatusOK, func() {
 				Body("metrics")

@@ -13,7 +13,7 @@ paths:
       summary: aggregate metrics
       operationId: metrics#aggregate
       parameters:
-      - name: tags
+      - name: tag
         in: query
         allowEmptyValue: true
         schema:

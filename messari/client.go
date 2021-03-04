@@ -27,7 +27,7 @@ type successResponse struct {
 	Data interface{} `json:"data"`
 }
 
-// AssetMetrics provide mapped access to asset metric response data
+// AssetMetrics provides mapped access to asset metric response data
 type AssetMetrics struct {
 	MarketData struct {
 		PriceUSD                    float64 `json:"price_usd"`
@@ -38,12 +38,12 @@ type AssetMetrics struct {
 		CurrentMarketCapUSD float64 `json:"current_marketcap_usd"`
 	} `json:"marketcap"`
 	MiscData struct {
-		Tags   []string `json:"tags"`
-		Sector []string `json:"sector"`
+		Tags    []string `json:"tags"`
+		Sectors []string `json:"sectors"`
 	} `json:"misc_data"`
 }
 
-// Asset provide mapped access to asset response data
+// Asset provides mapped access to asset response data
 type Asset struct {
 	Slug    string       `json:"slug"`
 	Metrics AssetMetrics `json:"metrics"`
@@ -68,7 +68,9 @@ func NewClient(apiKey string) *Client {
 func (c *Client) fetch(req *http.Request, v interface{}) error {
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("Accept", "application/json; charset=utf-8")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.apiKey))
+	req.Header.Set("x-messari-api-key", c.apiKey)
+
+	fmt.Println("Client.fetch:", req.URL.String())
 
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
@@ -99,7 +101,7 @@ func (c *Client) fetch(req *http.Request, v interface{}) error {
 // GetAssetMetrics calls /api/v1/assets/{slug}/metrics
 func (c *Client) GetAssetMetrics(ctx context.Context, assetSlug string, params map[string]interface{}) (res *AssetMetrics, err error) {
 	res = &AssetMetrics{}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/assets/%s/metrics", BaseURLV1, assetSlug), nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/assets/%s/metrics", BaseURLV1, assetSlug), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -109,9 +111,8 @@ func (c *Client) GetAssetMetrics(ctx context.Context, assetSlug string, params m
 		if fields, ok := params["fields"].([]string); ok {
 			q.Add("fields", strings.Join(fields, ","))
 		}
+		req.URL.RawQuery = q.Encode()
 	}
-
-	req = req.WithContext(ctx)
 
 	if err := c.fetch(req, res); err != nil {
 		return nil, err
@@ -133,12 +134,13 @@ func (c *Client) GetAllAssets(ctx context.Context, params map[string]interface{}
 		if fields, ok := params["fields"].([]string); ok {
 			q.Add("fields", strings.Join(fields, ","))
 		}
-		if limit, ok := params["limit"].(string); ok {
-			q.Add("limit", limit)
+		if limit, ok := params["limit"].(int); ok {
+			q.Add("limit", fmt.Sprint(limit))
 		}
-		if page, ok := params["page"].(string); ok {
-			q.Add("page", page)
+		if page, ok := params["page"].(int); ok {
+			q.Add("page", fmt.Sprint(page))
 		}
+		req.URL.RawQuery = q.Encode()
 	}
 
 	req = req.WithContext(ctx)

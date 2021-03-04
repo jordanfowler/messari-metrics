@@ -26,11 +26,11 @@ func BuildAssetPayload(metricsAssetSlug string) (*metrics.AssetPayload, error) {
 
 // BuildAggregatePayload builds the payload for the metrics aggregate endpoint
 // from CLI flags.
-func BuildAggregatePayload(metricsAggregateTags string, metricsAggregateSector string) (*metrics.AggregatePayload, error) {
-	var tags *string
+func BuildAggregatePayload(metricsAggregateTag string, metricsAggregateSector string) (*metrics.AggregatePayload, error) {
+	var tag *string
 	{
-		if metricsAggregateTags != "" {
-			tags = &metricsAggregateTags
+		if metricsAggregateTag != "" {
+			tag = &metricsAggregateTag
 		}
 	}
 	var sector *string
@@ -40,7 +40,7 @@ func BuildAggregatePayload(metricsAggregateTags string, metricsAggregateSector s
 		}
 	}
 	v := &metrics.AggregatePayload{}
-	v.Tags = tags
+	v.Tag = tag
 	v.Sector = sector
 
 	return v, nil

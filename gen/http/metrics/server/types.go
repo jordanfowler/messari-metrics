@@ -79,9 +79,9 @@ func NewAssetPayload(slug string) *metrics.AssetPayload {
 }
 
 // NewAggregatePayload builds a metrics service aggregate endpoint payload.
-func NewAggregatePayload(tags *string, sector *string) *metrics.AggregatePayload {
+func NewAggregatePayload(tag *string, sector *string) *metrics.AggregatePayload {
 	v := &metrics.AggregatePayload{}
-	v.Tags = tags
+	v.Tag = tag
 	v.Sector = sector
 
 	return v

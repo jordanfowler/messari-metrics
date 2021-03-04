@@ -27,11 +27,12 @@ func TestGetAllAssets(t *testing.T) {
 	ctx := context.Background()
 
 	params := map[string]interface{}{
-		"fields": []string{"market_data"},
+		"limit": 30,
+		"page":  1,
 	}
 	res, err := c.GetAllAssets(ctx, params)
-	t.Logf("res: %v", res)
 
 	assert.Nil(t, err, "expecting nil error")
 	assert.NotNil(t, res, "expecting non-nil result")
+	assert.Len(t, res, 30, "expecting there to be 30 assets")
 }

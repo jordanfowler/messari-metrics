@@ -60,18 +60,18 @@ func EncodeAggregateResponse(encoder func(context.Context, http.ResponseWriter) 
 func DecodeAggregateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			tags   *string
+			tag    *string
 			sector *string
 		)
-		tagsRaw := r.URL.Query().Get("tags")
-		if tagsRaw != "" {
-			tags = &tagsRaw
+		tagRaw := r.URL.Query().Get("tag")
+		if tagRaw != "" {
+			tag = &tagRaw
 		}
 		sectorRaw := r.URL.Query().Get("sector")
 		if sectorRaw != "" {
 			sector = &sectorRaw
 		}
-		payload := NewAggregatePayload(tags, sector)
+		payload := NewAggregatePayload(tag, sector)
 
 		return payload, nil
 	}

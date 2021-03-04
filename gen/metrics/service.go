@@ -41,7 +41,7 @@ type AssetResult struct {
 
 // AggregatePayload is the payload type of the metrics service aggregate method.
 type AggregatePayload struct {
-	Tags   *string
+	Tag    *string
 	Sector *string
 }
 

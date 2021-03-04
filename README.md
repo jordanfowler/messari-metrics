@@ -2,10 +2,12 @@
 
 ## Key takeaways
 
-1. Used Goa (https://github.com/goadesign/goa) to generate design-based service, see: `design/design.go` for details
+1. Used Goa (https://github.com/goadesign/goa) to generate design-based service, see: `design/design.go`
+    - Took some extra time on this as I've been wanting to learn Goa
 2. Implemented Messari API client with two endpoints, see: `messari/client.go`
 3. Implemented Metrics Service API, see: `endpoints.go`
 4. Implemented an AssetCache for reduced aggregate request times, see: `asset_cache.go`
+    - I would move this to a Redis-backed cache in a real world scenario
 5. Wrote some tests, but would write a lot more in the real world
 
 ## Setup

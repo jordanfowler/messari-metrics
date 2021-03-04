@@ -47,18 +47,14 @@ func buildAssetCaches() {
 
 	var assetsPage = 1
 	for {
-		fmt.Println(fmt.Sprintf("buildAssetCaches loading page=%v limit=%v", assetsPage, assetsLimit))
-
 		assets, err := client.GetAllAssets(ctx, map[string]interface{}{
-			"page":  fmt.Sprint(assetsPage),
-			"limit": fmt.Sprint(assetsLimit),
-			"fields": []string{
-				"market_data",
-			},
+			"page":  assetsPage,
+			"limit": assetsLimit,
 		})
 
+		fmt.Println(fmt.Sprintf("buildAssetCaches loading page=%v limit=%v total=%v", assetsPage, assetsLimit, len(assets)))
+
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Error [GetAllAssets]: %s", err))
 			break
 		}
 
@@ -66,7 +62,7 @@ func buildAssetCaches() {
 			for _, tag := range asset.Metrics.MiscData.Tags {
 				PushAssetCache("tags", tag, asset.Slug)
 			}
-			for _, sector := range asset.Metrics.MiscData.Sector {
+			for _, sector := range asset.Metrics.MiscData.Sectors {
 				PushAssetCache("sectors", sector, asset.Slug)
 			}
 		}
@@ -76,8 +72,9 @@ func buildAssetCaches() {
 		} else {
 			assetsPage++
 		}
-		fmt.Println(AssetCaches)
-		break
 	}
 
+	for k, v := range AssetCaches {
+		fmt.Println(fmt.Sprintf("AssetCache key=%s size=%v", k, len(v)))
+	}
 }

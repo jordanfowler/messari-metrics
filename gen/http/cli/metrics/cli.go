@@ -49,7 +49,7 @@ func ParseEndpoint(
 		metricsAssetSlugFlag = metricsAssetFlags.String("slug", "REQUIRED", "")
 
 		metricsAggregateFlags      = flag.NewFlagSet("aggregate", flag.ExitOnError)
-		metricsAggregateTagsFlag   = metricsAggregateFlags.String("tags", "", "")
+		metricsAggregateTagFlag    = metricsAggregateFlags.String("tag", "", "")
 		metricsAggregateSectorFlag = metricsAggregateFlags.String("sector", "", "")
 	)
 	metricsFlags.Usage = metricsUsage
@@ -126,7 +126,7 @@ func ParseEndpoint(
 				data, err = metricsc.BuildAssetPayload(*metricsAssetSlugFlag)
 			case "aggregate":
 				endpoint = c.Aggregate()
-				data, err = metricsc.BuildAggregatePayload(*metricsAggregateTagsFlag, *metricsAggregateSectorFlag)
+				data, err = metricsc.BuildAggregatePayload(*metricsAggregateTagFlag, *metricsAggregateSectorFlag)
 			}
 		}
 	}
@@ -163,13 +163,13 @@ Example:
 }
 
 func metricsAggregateUsage() {
-	fmt.Fprintf(os.Stderr, `%s [flags] metrics aggregate -tags STRING -sector STRING
+	fmt.Fprintf(os.Stderr, `%s [flags] metrics aggregate -tag STRING -sector STRING
 
 Aggregate implements aggregate.
-    -tags STRING: 
+    -tag STRING: 
     -sector STRING: 
 
 Example:
-    `+os.Args[0]+` metrics aggregate --tags "Aliquam assumenda." --sector "Animi quod voluptas."
+    `+os.Args[0]+` metrics aggregate --tag "Aliquam assumenda." --sector "Animi quod voluptas."
 `, os.Args[0])
 }

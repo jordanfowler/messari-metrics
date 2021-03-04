@@ -24,8 +24,8 @@ func NewMetrics(logger *log.Logger) metrics.Service {
 // Asset implements asset endpoint.
 func (s *metricssrvc) Asset(ctx context.Context, p *metrics.AssetPayload) (res *metrics.AssetResult, err error) {
 	res = &metrics.AssetResult{}
+
 	client := messari.NewClient(os.Getenv("MESSARI_API_KEY"))
-	// res.Metric, err = fetchAssetMetrics(ctx, client, *p.Slug)
 	amRes, err := client.GetAssetMetrics(ctx, *p.Slug, map[string]interface{}{
 		"fields": []string{
 			"market_data",
@@ -60,6 +60,9 @@ func (s *metricssrvc) Aggregate(ctx context.Context, p *metrics.AggregatePayload
 	} else if p.Tag != nil {
 		assetSlugs = GetAssetCacheSlugs("tags", *p.Tag)
 		s.logger.Println(fmt.Sprintf("Aggregate payload tag=%s slugs=%v", *p.Tag, assetSlugs))
+	} else {
+		assetSlugs = GetAssetCacheSlugs("mktcapGTE", "100M")
+		s.logger.Println(fmt.Sprintf("Aggregate default payload mktcapGTE>=%s slugs=%v", "100M", assetSlugs))
 	}
 
 	var aggregateCh = make(chan *metrics.AssetResult, len(assetSlugs))

@@ -59,6 +59,9 @@ func buildAssetCaches() {
 		}
 
 		for _, asset := range assets {
+			if asset.Metrics.MarketCap.CurrentMarketCapUSD >= 100_000_000 {
+				PushAssetCache("mktcapGTE", "100M", asset.Slug)
+			}
 			for _, tag := range asset.Metrics.MiscData.Tags {
 				PushAssetCache("tags", tag, asset.Slug)
 			}

@@ -33,5 +33,5 @@
 
 ## Caveats
 
-- Aggregate endpoint will not show full results until all asset tags & sectors have been cached, time required: ~ 15 - 25s 
+- Aggregate endpoint will take a few seconds to have a fully warmed cache
 - Until removing Messari API rate limiting, aggregate endpoint may become unresponsive

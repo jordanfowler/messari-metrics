@@ -34,4 +34,4 @@
 ## Caveats
 
 - Aggregate endpoint will take a few seconds to have a fully warmed cache
-- Until removing Messari API rate limiting, aggregate endpoint may become unresponsive
+- Until removing Messari API rate limiting, aggregate endpoint may encounter errors with sub-requests

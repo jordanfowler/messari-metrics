@@ -76,17 +76,3 @@ func DecodeAggregateRequest(mux goahttp.Muxer, decoder func(*http.Request) goaht
 		return payload, nil
 	}
 }
-
-// marshalMetricsAssetMetricsToAssetMetrics builds a value of type
-// *AssetMetrics from a value of type *metrics.AssetMetrics.
-func marshalMetricsAssetMetricsToAssetMetrics(v *metrics.AssetMetrics) *AssetMetrics {
-	res := &AssetMetrics{
-		AssetSlug: v.AssetSlug,
-		Price:     v.Price,
-		Vlm24hr:   v.Vlm24hr,
-		Chg24hr:   v.Chg24hr,
-		Mktcap:    v.Mktcap,
-	}
-
-	return res
-}

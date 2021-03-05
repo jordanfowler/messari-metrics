@@ -17,7 +17,7 @@ type AssetResponseBody AssetMetricsResponseBody
 
 // AggregateResponseBody is the type of the "metrics" service "aggregate"
 // endpoint HTTP response body.
-type AggregateResponseBody []*AssetMetrics
+type AggregateResponseBody AggregateMetricsResponseBody
 
 // AssetMetricsResponseBody is used to define fields on response body types.
 type AssetMetricsResponseBody struct {
@@ -33,10 +33,12 @@ type AssetMetricsResponseBody struct {
 	Mktcap *float64 `form:"mktcap,omitempty" json:"mktcap,omitempty" xml:"mktcap,omitempty"`
 }
 
-// AssetMetrics is used to define fields on response body types.
-type AssetMetrics struct {
-	// Asset slug
-	AssetSlug *string `form:"assetSlug,omitempty" json:"assetSlug,omitempty" xml:"assetSlug,omitempty"`
+// AggregateMetricsResponseBody is used to define fields on response body types.
+type AggregateMetricsResponseBody struct {
+	// Aggregation name, e.g. tag, sector, etc.
+	AggName *string `form:"aggName,omitempty" json:"aggName,omitempty" xml:"aggName,omitempty"`
+	// Aggregation value, e.g. DeFi, FinTech, etc.
+	AggValue *string `form:"aggValue,omitempty" json:"aggValue,omitempty" xml:"aggValue,omitempty"`
 	// Current spot price in USD
 	Price *float64 `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
 	// Volume traded over last 24 hours
@@ -58,7 +60,7 @@ func NewAssetResultOK(body *AssetResponseBody) *metrics.AssetResult {
 		Mktcap:    body.Mktcap,
 	}
 	res := &metrics.AssetResult{
-		Metric: v,
+		Metrics: v,
 	}
 
 	return res
@@ -66,10 +68,14 @@ func NewAssetResultOK(body *AssetResponseBody) *metrics.AssetResult {
 
 // NewAggregateResultOK builds a "metrics" service "aggregate" endpoint result
 // from a HTTP "OK" response.
-func NewAggregateResultOK(body []*AssetMetrics) *metrics.AggregateResult {
-	v := make([]*metrics.AssetMetrics, len(body))
-	for i, val := range body {
-		v[i] = unmarshalAssetMetricsToMetricsAssetMetrics(val)
+func NewAggregateResultOK(body *AggregateResponseBody) *metrics.AggregateResult {
+	v := &metrics.AggregateMetrics{
+		AggName:  body.AggName,
+		AggValue: body.AggValue,
+		Price:    body.Price,
+		Vlm24hr:  body.Vlm24hr,
+		Chg24hr:  body.Chg24hr,
+		Mktcap:   body.Mktcap,
 	}
 	res := &metrics.AggregateResult{
 		Metrics: v,
